@@ -212,4 +212,22 @@ def buy_medicine(request, medicine_id):
 
 
 
+def viewusers(request):
+    users=Customer.objects.all()
+    return render(request,'admin/viewusers.html',{'users':users})
+
+
+
+def viewsellers(request):
+    sellers=Seller.objects.all()
+    return render(request,'admin/viewsellers.html',{'sellers':sellers})
+
+
+
+def viewmedicines(request):
+    medicine=Medicine.objects.all()
+    return render(request,'admin/viewmedicines.html',{'medicine':medicine})
+
+
+
 

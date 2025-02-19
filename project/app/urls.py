@@ -17,6 +17,10 @@ urlpatterns = [
     path('buy/<int:medicine_id>/', views.buy_medicine, name='buy_medicine'),
     # path("payment/<int:order_id>/", views.payment_page, name="payment_page"),
     # path("payment-success/", views.payment_success, name="payment_success"),
+    path("viewusers/", views.viewusers, name="viewusers"),
+    path("viewsellers/", views.viewsellers, name="viewsellers"),
+    path("viewmedicine/", views.viewmedicines, name="viewmedicines"),
+
 
 
 

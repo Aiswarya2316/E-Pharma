@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicines | E-Pharma</title>
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            padding: 15px 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar img {
+            height: 50px;
+        }
+
+        .navbar div {
+            display: flex;
+            gap: 25px;
+        }
+
+        .navbar a {
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #f8d210;
+        }
+
+        .logout {
+            background: #dc3545;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .logout:hover {
+            background: #c82333;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 25px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        /* Search Box */
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .search-box select, .search-box button {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .search-box select {
+            flex: 1;
+            max-width: 350px;
+            margin-right: 12px;
+        }
+
+        .search-box button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .search-box button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Medicine Cards Grid */
+        .medicine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .medicine-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .medicine-card img {
+            width: 20%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .medicine-card h3 {
+            color: #007bff;
+            margin-top: 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .medicine-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .buy-btn {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .buy-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .navbar div {
+                margin-top: 10px;
+            }
+
+            .search-box {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .search-box select {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#"><img src="../static/OIP (2).jpg" alt="logo"></a>
+        <div>
+        <a href="../viewusers">View Users</a>
+        <a href="../viewsellers">View Sellers</a>
+        <a href="#">View Bookings</a>
+        <a href="../viewmedicine">View Medicines</a>
+        <a href="../logout" class="logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>Available Medicines</h2>
+
+        <!-- Search Box -->
+       
+
+        <!-- Medicines List -->
+        <div class="medicine-grid">
+            {% for med in medicine %}
+            <div class="medicine-card">
+                <img src="{{ med.image.url }}" alt="{{ med.name }}">
+                <h3>{{ med.name }}</h3>
+                <p><strong>Category:</strong> {{ med.category }}</p>
+                <p><strong>Price:</strong> ₹{{ med.price }}</p>
+                <p><strong>Stock:</strong> {{ med.stock }}</p>
+                <p>{{ med.description|truncatechars:80 }}</p>
+                <a href="{% url 'buy_medicine' med.pk %}" class="buy-btn">Buy with Prescription</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>
