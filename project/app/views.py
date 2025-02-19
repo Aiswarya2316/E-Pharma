@@ -163,3 +163,53 @@ def delete_medicine(request, medicine_id):
     messages.success(request, "Medicine deleted successfully!")
     return redirect("sellerhome")
 
+
+
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Medicine, Category
+from .forms import PrescriptionUploadForm
+
+# View all medicines
+def medicine_list(request):
+    medicines = Medicine.objects.all()
+    categories = Category.objects.all()
+    query = request.GET.get('category')
+    if query:
+        medicines = medicines.filter(category__name__icontains=query)
+
+    return render(request, 'customer/medicinelist.html', {'medicines': medicines, 'categories': categories})
+
+
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Medicine, Order
+from .forms import PrescriptionUploadForm
+
+
+def buy_medicine(request, medicine_id):
+    medicine = get_object_or_404(Medicine, id=medicine_id)
+
+    if request.method == "POST":
+        form = PrescriptionUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.customer = request.user
+            order.medicine = medicine
+            order.status = "Pending"  # Set order status as pending
+            order.save()
+            return redirect("payment_page", order_id=order.id)  # Redirect to payment page
+
+    else:
+        form = PrescriptionUploadForm()
+
+    return render(request, "customer/buymedicines.html", {"form": form, "medicine": medicine})
+
+
+
+
+

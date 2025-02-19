@@ -61,3 +61,13 @@ class MedicineForm(forms.ModelForm):
     class Meta:
         model = Medicine
         fields = ["name", "category", "price", "stock", "description", "image"]
+
+
+from django import forms
+from .models import Order
+
+class PrescriptionUploadForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ["prescription"]
+
