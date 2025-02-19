@@ -20,6 +20,8 @@ urlpatterns = [
     path("viewusers/", views.viewusers, name="viewusers"),
     path("viewsellers/", views.viewsellers, name="viewsellers"),
     path("viewmedicine/", views.viewmedicines, name="viewmedicines"),
+    path("about/", views.about, name="about"),
+
 
 
 

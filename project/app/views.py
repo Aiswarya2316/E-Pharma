@@ -230,4 +230,7 @@ def viewmedicines(request):
 
 
 
+def about(request):
+    return render(request,'customer/about.html')
+
 
