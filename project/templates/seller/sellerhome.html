@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard | E-Pharma</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #007bff;
+            padding: 15px 50px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar img {
+            width: 120px;
+            height: auto;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .logout {
+            background-color: #dc3545;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .logout:hover {
+            background-color: #a71d2a;
+        }
+
+        /* Hero Section */
+        .hero {
+            width: 100%;
+            height: 60vh;
+            background: url("../static/FMT-MEDICINE-CAPSULE-TABLET-UBAT-KKM-01.webp") no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+        }
+
+        .hero-content h1 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .hero-content .btn {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .hero-content .btn:hover {
+            background-color: #218838;
+        }
+
+        /* Dashboard Section */
+        .dashboard {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 50px;
+            flex-wrap: wrap;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 25px;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: 0.3s ease-in-out;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-card h3 {
+            font-size: 22px;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-card p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .dashboard-card a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Medicines Table */
+        .medicine-section {
+            width: 90%;
+            margin: auto;
+            text-align: center;
+        }
+
+        .medicine-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .table-actions a {
+            padding: 8px 12px;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .edit {
+            background-color: #28a745;
+        }
+
+        .delete {
+            background-color: #dc3545;
+        }
+
+        .edit:hover {
+            background-color: #218838;
+        }
+
+        .delete:hover {
+            background-color: #a71d2a;
+        }
+
+        /* Footer */
+        .footer {
+            background: #007bff;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="#"><img src="../static/OIP (1).jpg" alt="logo"></a>
+        <div>
+            <a href="../add-medicine">Add Medicine</a>
+            <a href="#">Bookings</a>
+            <a href="../logout" class="logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Welcome, Seller!</h1>
+            <p>Manage your medicines, view bookings, and grow your business.</p>
+            <a href="../add-medicine" class="btn">Add New Medicine</a>
+        </div>
+    </div>
+
+    
+
+    <!-- Medicines Table -->
+    <div class="medicine-section">
+        <h2>Medicine List</h2>
+        <table>
+            <tr>
+                <th>Medicine</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+            {% for med in medicines %}
+            <tr>
+                <td>{{ med.name }}</td>
+                <td>{{ med.category }}</td>
+                <td>{{ med.price }}</td>
+                <td>{{ med.stock }}</td>
+                <td class="table-actions">
+                    <a href="{% url 'edit_medicine' med.id %}" class="edit">Edit</a>
+                    <a href="{% url 'delete_medicine' med.id %}" class="delete">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 E-Pharma. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
