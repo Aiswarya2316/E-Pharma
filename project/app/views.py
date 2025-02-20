@@ -74,7 +74,9 @@ def user_login(request):
             elif Seller.objects.filter(email=email, password=password).exists():
                 user = Seller.objects.get(email=email)
                 request.session["user_type"] = "Seller"
+                request.session["user_id"] = user.id  # Store seller ID in session
                 redirect_url = "sellerhome"
+
             elif AdminReg.objects.filter(email=email, password=password).exists():
                 user = AdminReg.objects.get(email=email)
                 request.session["user_type"] = "Admin"
@@ -179,35 +181,118 @@ def medicine_list(request):
     query = request.GET.get('category')
     if query:
         medicines = medicines.filter(category__name__icontains=query)
-
     return render(request, 'customer/medicinelist.html', {'medicines': medicines, 'categories': categories})
 
 
 
 
+
+
+
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from .models import Medicine, Order
 from .forms import PrescriptionUploadForm
-
-
 def buy_medicine(request, medicine_id):
     medicine = get_object_or_404(Medicine, id=medicine_id)
-
+    customer = Customer.objects.first()  # Assign a default customer (or create one if necessary)
+    
     if request.method == "POST":
         form = PrescriptionUploadForm(request.POST, request.FILES)
         if form.is_valid():
             order = form.save(commit=False)
-            order.customer = request.user
             order.medicine = medicine
-            order.status = "Pending"  # Set order status as pending
+            order.customer = customer  # Assign the default customer
+            order.status = "Pending"
             order.save()
-            return redirect("payment_page", order_id=order.id)  # Redirect to payment page
-
+            return redirect("payment_page", order_id=order.id)
+    
     else:
         form = PrescriptionUploadForm()
 
     return render(request, "customer/buymedicines.html", {"form": form, "medicine": medicine})
+
+
+
+
+
+import razorpay
+from django.conf import settings
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Order
+
+# Razorpay client initialization
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+def payment_page(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    # Convert price to paisa (Razorpay expects amount in paisa)
+    amount = int(order.medicine.price * 100)  
+
+    # Create a Razorpay Order
+    razorpay_order = razorpay_client.order.create({
+        "amount": amount,
+        "currency": "INR",
+        "payment_capture": "1"
+    })
+
+    context = {
+        "order": order,
+        "razorpay_key": settings.RAZORPAY_KEY_ID,
+        "amount": amount,
+        "payment_id": razorpay_order["id"]
+    }
+    return render(request, "customer/payment.html", context)
+
+
+
+
+def payment_success(request):
+    order_id = request.GET.get("order_id")
+    payment_id = request.GET.get("payment_id")
+
+    order = get_object_or_404(Order, id=order_id)
+    order.status = "Paid"
+    order.save()
+
+    return redirect("booking_history")  # Redirect to booking history
+
+
+
+
+def booking_history(request):
+    customer = Customer.objects.first()  # Get the logged-in customer (Modify based on your logic)
+    orders = Order.objects.filter(customer=customer).order_by("-order_date")  # Show recent orders first
+
+    return render(request, "customer/booking_history.html", {"orders": orders})
+
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Order, Seller
+
+def seller_booking_history(request):
+    seller_id = request.session.get("user_id")  # Get logged-in seller's ID from session
+    
+    if not seller_id:
+        return render(request, "error.html", {"message": "Seller not found. Please log in again."})
+
+    seller = get_object_or_404(Seller, id=seller_id)  # Fetch seller by ID
+    
+    orders = Order.objects.filter(medicine__seller=seller).order_by("-order_date")  # Fetch seller's orders
+
+    return render(request, "seller/booking_history.html", {"orders": orders, "seller": seller})
+
+
+
+
+
+
+def viewbookings(request):
+    users=Order.objects.all()
+    return render(request,'admin/viewbooking.html',{'users':users})
 
 
 
@@ -234,3 +319,58 @@ def about(request):
     return render(request,'customer/about.html')
 
 
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.hashers import make_password
+from .models import Customer
+
+def customer_profile(request):
+    customer_email = request.session.get('customer_email')  # Get logged-in customer's email
+    if not customer_email:
+        messages.error(request, "Please log in to view your profile.")
+        return redirect('login')
+
+    customer = Customer.objects.filter(email=customer_email).first()
+    if not customer:
+        messages.error(request, "Customer not found.")
+        return redirect('login')
+
+    return render(request, 'customer/profile.html', {'customer': customer})
+
+
+def update_customer_profile(request):
+    customer_email = request.session.get('customer_email')
+    if not customer_email:
+        messages.error(request, "Please log in to update your profile.")
+        return redirect('login')
+
+    customer = Customer.objects.filter(email=customer_email).first()
+    if not customer:
+        messages.error(request, "Customer not found.")
+        return redirect('login')
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        location = request.POST.get('location')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password and password != confirm_password:
+            messages.error(request, "Passwords do not match!")
+            return redirect('update_customer_profile')
+
+        customer.name = name
+        customer.phone = phone
+        customer.location = location
+        if password:
+            customer.password = make_password(password)  # Secure password storage
+        customer.save()
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect('customer_profile')
+
+    return render(request, 'customer/update_profile.html', {'customer': customer})

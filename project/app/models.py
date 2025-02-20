@@ -50,7 +50,7 @@ class Medicine(models.Model):
 
 
 class Order(models.Model):
-    customer = models.ForeignKey("Customer", on_delete=models.CASCADE)
+    customer = models.ForeignKey("Customer", on_delete=models.CASCADE, null=True, blank=True) 
     medicine = models.ForeignKey("Medicine", on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     prescription = models.FileField(upload_to="prescriptions/", blank=False, null=False)

@@ -40,6 +40,14 @@
         .btn:hover {
             background: #0056b3;
         }
+
+        /* Success Notification */
+        .success-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -49,20 +57,26 @@
         <p><strong>Medicine:</strong> {{ order.medicine.name }}</p>
         <p><strong>Price:</strong> ₹{{ order.medicine.price }}</p>
         
-        <button class="btn" id="pay-btn">Pay ₹{{ amount }}</button>
+        <button class="btn" id="pay-btn">Pay ₹{{ order.medicine.price }}</button>
+        <p class="success-message" id="success-message">Payment Successful! Redirecting...</p>
     </div>
 
     <script>
         document.getElementById("pay-btn").onclick = function () {
             var options = {
                 "key": "{{ razorpay_key }}",
-                "amount": "{{ amount }}" * 100, // Convert to paisa
+                "amount": "{{ amount }}", 
                 "currency": "INR",
                 "name": "E-Pharma",
                 "description": "Order Payment",
                 "order_id": "{{ payment_id }}",
                 "handler": function (response) {
-                    window.location.href = "/payment-success/?order_id={{ order.id }}&payment_id=" + response.razorpay_payment_id;
+                    document.getElementById("success-message").style.display = "block"; // Show success message
+                    
+                    // Redirect to booking history page after successful payment
+                    setTimeout(function () {
+                        window.location.href = "/payment-success/?order_id={{ order.id }}&payment_id=" + response.razorpay_payment_id;
+                    }, 2000);
                 },
                 "theme": {
                     "color": "#007bff"

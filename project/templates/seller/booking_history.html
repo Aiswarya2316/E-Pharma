@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicines | E-Pharma</title>
+    <title>Seller Booking History | E-Pharma</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -13,10 +13,11 @@
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background: #f8f9fa;
-            color: #333;
+            background: #f4f7f9;
+            margin: 0;
+            padding: 0;
         }
-
+        
         /* Navbar */
         .navbar {
             display: flex;
@@ -46,8 +47,8 @@
         }
         .logout {
             background: red;
-            padding: 8px 15px;
             border-radius: 5px;
+            padding: 8px 15px;
         }
 
         /* Container */
@@ -63,8 +64,8 @@
         h2 {
             color: #007bff;
             text-align: center;
-            font-weight: 600;
             margin-bottom: 20px;
+            font-weight: 600;
         }
 
         /* Table Styling */
@@ -76,19 +77,23 @@
             overflow: hidden;
             border-radius: 10px;
         }
+
         th, td {
             padding: 12px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background: #007bff;
             color: white;
             font-weight: 600;
         }
+
         tbody tr:nth-child(even) {
             background: #f8f9fa;
         }
+
         tbody tr:hover {
             background: rgba(0, 123, 255, 0.1);
             transition: 0.3s;
@@ -101,14 +106,17 @@
             border-radius: 5px;
             display: inline-block;
         }
+
         .approved {
             background: #28a745;
             color: white;
         }
+
         .pending {
             background: #ffc107;
             color: white;
         }
+
         .rejected {
             background: #dc3545;
             color: white;
@@ -116,13 +124,6 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                text-align: center;
-            }
-            .navbar div {
-                margin-top: 10px;
-            }
             .container {
                 padding: 20px;
             }
@@ -134,23 +135,17 @@
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar">
-        <a href="../adminhome"><img src="../static/OIP (3).jpg" alt="E-Pharma Logo"></a>
+        <a href="../sellerhome"><img src="../static/OIP (1).jpg" alt="E-Pharma Logo"></a>
         <div>
-            <a href="../viewusers">View Users</a>
-            <a href="../viewsellers">View Sellers</a>
-            <a href="../viewbookings">View Bookings</a>
-            <a href="../viewmedicine">View Medicines</a>
+            <a href="../add-medicine">Add Medicine</a>
+            <a href="../sellerbookings">Bookings</a>
             <a href="../logout" class="logout">Logout</a>
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container">
-        <h2>Booking History</h2>
-
-        <!-- Medicines List -->
+        <h2>Booking History for {{ seller.name }}</h2>
         <table>
             <thead>
                 <tr>
@@ -162,7 +157,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for order in users %}
+                {% for order in orders %}
                 <tr>
                     <td>{{ order.medicine.name }}</td>
                     <td>{{ order.customer.name }}</td>

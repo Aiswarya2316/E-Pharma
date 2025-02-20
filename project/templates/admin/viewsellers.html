@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medicines | E-Pharma</title>
+    <title>Sellers | E-Pharma</title>
     <style>
         /* Google Font */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
@@ -27,6 +27,7 @@
             align-items: center;
             background-color: #007bff;
             padding: 15px 30px;
+            color: white;
         }
 
         .navbar img {
@@ -65,91 +66,31 @@
             margin-bottom: 20px;
         }
 
-        /* Search Box */
-        .search-box {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+        /* Sellers Table */
+        .sellers-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .search-box select, .search-box button {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
+        .sellers-table th, .sellers-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
         }
 
-        .search-box select {
-            flex: 1;
-            max-width: 300px;
-            margin-right: 10px;
-        }
-
-        .search-box button {
+        .sellers-table th {
             background-color: #007bff;
             color: white;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-
-        .search-box button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Medicine Cards Grid */
-        .medicine-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .medicine-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .medicine-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .medicine-card img {
-            width: 20%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .medicine-card h3 {
-            color: #007bff;
-            margin-top: 10px;
-            font-size: 20px;
-        }
-
-        .medicine-card p {
-            font-size: 14px;
-            margin-top: 5px;
-            color: #555;
-        }
-
-        .buy-btn {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            padding: 8px;
-            background-color: #28a745;
-            color: white;
             font-weight: bold;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: 0.3s;
         }
 
-        .buy-btn:hover {
-            background-color: #218838;
+        .sellers-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .sellers-table tr:hover {
+            background-color: #ddd;
         }
 
         /* Responsive */
@@ -163,26 +104,20 @@
                 margin-top: 10px;
             }
 
-            .search-box {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .search-box select {
-                margin-bottom: 10px;
+            .sellers-table th, .sellers-table td {
+                padding: 10px;
             }
         }
     </style>
 </head>
 <body>
-
     <!-- Navbar -->
     <nav class="navbar">
-        <a href="#"><img src="../static/OIP (2).jpg" alt="logo"></a>
+        <a href="../adminhome"><img src="../static/OIP (3).jpg" alt="logo"></a>
         <div>
             <a href="../viewusers">View Users</a>
             <a href="../viewsellers">View Sellers</a>
-            <a href="#">View Bookings</a>
+            <a href="../viewbookings">View Bookings</a>
             <a href="../viewmedicine">View Medicines</a>
             <a href="../logout" class="logout">Logout</a>
         </div>
@@ -190,23 +125,27 @@
 
     <!-- Main Content -->
     <div class="container">
-        <h2>Available Medicines</h2>
-
-        
-
-        <!-- Medicines List -->
-        <div class="medicine-grid">
-            {% for med in sellers %}
-            <div class="medicine-card">
-                <h3>Shop name : {{ med.name }}</h3>
-                <p><strong>email:</strong> {{ med.email }}</p>
-                <p><strong>phone:</strong> {{ med.phone }}</p>
-                <p><strong>location:</strong> {{ med.location }}</p>
-
-            </div>
-            {% endfor %}
-        </div>
+        <h2>Registered Sellers</h2>
+        <table class="sellers-table">
+            <thead>
+                <tr>
+                    <th>Shop Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for med in sellers %}
+                <tr>
+                    <td>{{ med.name }}</td>
+                    <td>{{ med.email }}</td>
+                    <td>{{ med.phone }}</td>
+                    <td>{{ med.location }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-
 </body>
 </html>
