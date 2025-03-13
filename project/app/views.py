@@ -261,10 +261,16 @@ def payment_success(request):
 
 
 def booking_history(request):
-    customer = Customer.objects.first()  # Get the logged-in customer (Modify based on your logic)
-    orders = Order.objects.filter(customer=customer).order_by("-order_date")  # Show recent orders first
+    if "user_id" in request.session and request.session.get("user_type") == "Customer":
+        customer_id = request.session["user_id"]  # Get logged-in customer's ID
+        customer = Customer.objects.get(id=customer_id)  # Fetch the specific customer
+        orders = Order.objects.filter(customer=customer).order_by("-order_date")  # Filter only their orders
 
-    return render(request, "customer/booking_history.html", {"orders": orders})
+        return render(request, "customer/booking_history.html", {"orders": orders})
+    
+    messages.error(request, "You need to log in to view your bookings.")
+    return redirect("login")  # Redirect to login page if not logged in
+
 
 
 
