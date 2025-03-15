@@ -252,24 +252,37 @@ def payment_success(request):
     payment_id = request.GET.get("payment_id")
 
     order = get_object_or_404(Order, id=order_id)
-    order.status = "Paid"
-    order.save()
+
+    # Ensure the logged-in user is assigned correctly
+    if "user_id" in request.session:
+        customer_id = request.session["user_id"]
+        order.customer_id = customer_id  # Assign the order to the correct customer
+        order.status = "Paid"
+        order.save()
 
     return redirect("booking_history")  # Redirect to booking history
 
 
 
 
+
 def booking_history(request):
     if "user_id" in request.session and request.session.get("user_type") == "Customer":
-        customer_id = request.session["user_id"]  # Get logged-in customer's ID
-        customer = Customer.objects.get(id=customer_id)  # Fetch the specific customer
-        orders = Order.objects.filter(customer=customer).order_by("-order_date")  # Filter only their orders
+        customer_id = request.session["user_id"]
+        print("Logged-in User ID:", customer_id)  # Debugging
 
-        return render(request, "customer/booking_history.html", {"orders": orders})
-    
+        try:
+            customer = Customer.objects.get(id=customer_id)  # Fetch the specific customer
+            orders = Order.objects.filter(customer=customer).order_by("-order_date")  # Filter only their orders
+
+            return render(request, "customer/booking_history.html", {"orders": orders})
+        except Customer.DoesNotExist:
+            messages.error(request, "Customer not found.")
+            return redirect("login")
+
     messages.error(request, "You need to log in to view your bookings.")
-    return redirect("login")  # Redirect to login page if not logged in
+    return redirect("login")
+
 
 
 

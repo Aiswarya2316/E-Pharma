@@ -148,17 +148,18 @@
             </thead>
             <tbody>
                 {% for order in orders %}
-                <tr>
-                    <td>{{ order.medicine.name }}</td>
-                    <td>₹{{ order.medicine.price }}</td>
-                    <td>{{ order.order_date }}</td>
-                    <td>
-                        <span class="status {% if order.status == 'Paid' %}paid{% else %}pending{% endif %}">
-                            {{ order.status }}
-                        </span>
-                    </td>
-                </tr>
-                {% endfor %}
+    <tr>
+        <td>{{ order.medicine.name }}</td>
+        <td>{{ order.medicine.price }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ order.status }}</td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="4">No bookings found.</td>
+    </tr>
+{% endfor %}
+
             </tbody>
         </table>
     </div>
