@@ -393,3 +393,17 @@ def update_customer_profile(request):
         return redirect('customer_profile')
 
     return render(request, 'customer/update_profile.html', {'customer': customer})
+
+
+
+
+from django.shortcuts import redirect, get_object_or_404
+from .models import Order
+
+def cancel_booking(request, order_id):
+    if request.method == "POST":
+        order = get_object_or_404(Order, id=order_id)
+        if order.status in ['Pending', 'Paid']:
+            order.status = 'Cancelled'
+            order.save()
+    return redirect('booking_history')

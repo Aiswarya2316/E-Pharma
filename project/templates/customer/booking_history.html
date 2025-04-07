@@ -119,6 +119,21 @@
             color: #856404;
             border: 1px solid #ffeeba;
         }
+        .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        
+        .cancel-btn:hover {
+            background-color: #bd2130;
+        }
+        
     </style>
 </head>
 <body>
@@ -144,22 +159,42 @@
                     <th>Price</th>
                     <th>Order Date</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
+                
             </thead>
             <tbody>
                 {% for order in orders %}
-    <tr>
-        <td>{{ order.medicine.name }}</td>
-        <td>{{ order.medicine.price }}</td>
-        <td>{{ order.order_date }}</td>
-        <td>{{ order.status }}</td>
-    </tr>
-{% empty %}
-    <tr>
-        <td colspan="4">No bookings found.</td>
-    </tr>
-{% endfor %}
-
+                <tr>
+                    <td>{{ order.medicine.name }}</td>
+                    <td>{{ order.medicine.price }}</td>
+                    <td>{{ order.order_date }}</td>
+                    <td>
+                        {% if order.status == "Pending" %}
+                            <span class="status pending">Pending</span>
+                        {% elif order.status == "Paid" %}
+                            <span class="status paid">Paid</span>
+                        {% else %}
+                            <span class="status">{{ order.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.status == "Pending" or order.status == "Paid" %}
+                            <form action="{% url 'cancel_booking' order.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="cancel-btn">Cancel</button>
+                            </form>
+                        {% else %}
+                            <span style="color: grey;">N/A</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No bookings found.</td>
+                </tr>
+                {% endfor %}
+                
             </tbody>
         </table>
     </div>
