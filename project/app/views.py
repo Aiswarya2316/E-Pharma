@@ -253,14 +253,20 @@ def payment_success(request):
 
     order = get_object_or_404(Order, id=order_id)
 
-    # Ensure the logged-in user is assigned correctly
     if "user_id" in request.session:
         customer_id = request.session["user_id"]
-        order.customer_id = customer_id  # Assign the order to the correct customer
+        order.customer_id = customer_id
         order.status = "Paid"
         order.save()
 
-    return redirect("booking_history")  # Redirect to booking history
+        # Reduce stock after successful payment
+        medicine = order.medicine
+        if medicine.stock > 0:
+            medicine.stock -= 1
+            medicine.save()
+
+    return redirect("booking_history")
+
 
 
 

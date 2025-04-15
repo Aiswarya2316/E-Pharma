@@ -223,7 +223,11 @@
                 <h3>{{ med.name }}</h3>
                 <p><strong>Category:</strong> {{ med.category }}</p>
                 <p><strong>Price:</strong> ₹{{ med.price }}</p>
-                <p><strong>Stock:</strong> {{ med.stock }}</p>
+                <p><strong>Stock:</strong> {{ med.stock }}
+                    {% if med.stock <= 5 %}
+                        <span style="color: red; font-weight: bold;">(Low Stock)</span>
+                    {% endif %}
+                </p>                
                 <p>{{ med.description|truncatechars:80 }}</p>
                 <a href="{% url 'buy_medicine' med.pk %}" class="buy-btn">Buy with Prescription</a>
 
